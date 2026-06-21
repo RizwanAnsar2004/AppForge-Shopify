@@ -1,0 +1,6 @@
+@shopify_saas_Core_HostAddress = http://localhost:5225
+
+GET {{shopify_saas_Core_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

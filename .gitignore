@@ -1,0 +1,24 @@
+# Build output
+bin/
+obj/
+out/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+# User-specific secrets (also stored outside the repo by dotnet user-secrets)
+secrets.json
+*.secret
+
+# Local environment overrides
+appsettings.*.Local.json
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
