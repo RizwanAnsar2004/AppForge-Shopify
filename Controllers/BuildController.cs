@@ -1,10 +1,11 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using shopify_saas_Core.Services;
+using shopify_saas_Core.Constants;
+using shopify_saas_Core.Models.AppBuilder;
+using shopify_saas_Core.Services.AppBuilder;
 
 namespace shopify_saas_Core.Controllers;
 
-// Turns a builder config into a local Flutter APK build and streams progress.
 [ApiController]
 [Route("api/build")]
 public sealed class BuildController : ControllerBase
@@ -13,18 +14,16 @@ public sealed class BuildController : ControllerBase
 
     public BuildController(AppBuildService builds) => _builds = builds;
 
-    // Start a build. Returns a jobId the client subscribes to over SSE.
     [HttpPost]
-    public IActionResult Start([FromBody] BuildRequest request)
+    public string Start([FromBody] BuildRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Store))
-            return BadRequest(new { message = "Missing 'store'." });
+            throw new Exception("Missing 'store'.");
 
         var job = _builds.Start(request);
-        return Ok(new { jobId = job.Id });
+        return job.Id;
     }
 
-    // Server-Sent Events: replays buffered logs, then streams new ones live until done.
     [HttpGet("{id}/events")]
     public async Task Events(string id, CancellationToken ct)
     {
@@ -35,7 +34,7 @@ public sealed class BuildController : ControllerBase
 
         if (job is null)
         {
-            await WriteEvent(new BuildEvent("done", Status: "failed", Message: "Unknown build job."), ct);
+            await WriteEvent(new BuildEvent("done", Status: BuildStatus.Failed, Message: "Unknown build job."), ct);
             return;
         }
 

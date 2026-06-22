@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Options;
-using shopify_saas_Core.Helpers;
+using shopify_saas_Core.Helpers.Shopify;
 using shopify_saas_Core.Options;
 
-namespace shopify_saas_Core.Services;
+namespace shopify_saas_Core.Services.Shopify;
 
 public sealed record AdminTokenResult(string AccessToken, string Scope);
 

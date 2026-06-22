@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 
-namespace shopify_saas_Core.Helpers;
+namespace shopify_saas_Core.Helpers.Shopify;
 
 public sealed class ApiCallerHelper
 {

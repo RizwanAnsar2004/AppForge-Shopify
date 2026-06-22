@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using shopify_saas_Core.Constants;
-using shopify_saas_Core.Services;
+using shopify_saas_Core.Services.Shopify;
 
 namespace shopify_saas_Core.Controllers;
 

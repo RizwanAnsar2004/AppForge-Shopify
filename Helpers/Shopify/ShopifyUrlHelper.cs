@@ -1,6 +1,6 @@
 using shopify_saas_Core.Constants;
 
-namespace shopify_saas_Core.Helpers;
+namespace shopify_saas_Core.Helpers.Shopify;
 
 public static class ShopifyUrlHelper
 {

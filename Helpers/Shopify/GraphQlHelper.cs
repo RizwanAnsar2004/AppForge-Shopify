@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace shopify_saas_Core.Helpers;
+namespace shopify_saas_Core.Helpers.Shopify;
 
 public static class GraphQlHelper
 {
