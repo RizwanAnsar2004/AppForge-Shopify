@@ -15,13 +15,13 @@ public sealed class BuildController : ControllerBase
     public BuildController(AppBuildService builds) => _builds = builds;
 
     [HttpPost]
-    public string Start([FromBody] BuildRequest request)
+    public BuildStartResponse Start([FromBody] BuildRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Store))
             throw new Exception("Missing 'store'.");
 
         var job = _builds.Start(request);
-        return job.Id;
+        return new BuildStartResponse { JobId = job.Id };
     }
 
     [HttpGet("{id}/events")]
