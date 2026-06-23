@@ -53,7 +53,7 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 ServeFolder(app, "Uploads", "/uploads");
-ServeFolder(app, "Downloads", "/downloads");
+ServeDownloads(app);
 
 app.UseAuthorization();
 app.MapControllers();
@@ -70,5 +70,19 @@ static void ServeFolder(WebApplication app, string folder, string requestPath)
     {
         FileProvider = new PhysicalFileProvider(path),
         RequestPath = requestPath,
+    });
+}
+
+static void ServeDownloads(WebApplication app)
+{
+    var path = Path.Combine(Directory.GetCurrentDirectory(), "Downloads");
+    Directory.CreateDirectory(path);
+    var contentTypes = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+    contentTypes.Mappings[".apk"] = "application/vnd.android.package-archive";
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(path),
+        RequestPath = "/downloads",
+        ContentTypeProvider = contentTypes,
     });
 }
