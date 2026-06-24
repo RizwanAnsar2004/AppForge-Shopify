@@ -53,7 +53,7 @@ public class AuthService
         {
             Name = request.Name.Trim(),
             Email = normalized,
-            Password = request.Password,
+            Password = AuthHelpers.HashPassword(request.Password, _authOptions.BcryptWorkFactor),
             UserType = request.UserType,
             Status = UserStatusEnum.Active,
             CreatedOn = DateTime.UtcNow,
@@ -61,6 +61,22 @@ public class AuthService
 
         db.Users.Add(user);
         await db.SaveChangesAsync();
+        return user;
+    }
+
+    public async Task<User> LoginAsync(LoginRequest request)
+    {
+        var normalized = request.Email.Trim().ToLower();
+
+        var user = await db.Users.FirstOrDefaultAsync(u => u.Email == normalized)
+            ?? throw new Exception("Invalid email or password.");
+
+        if (!AuthHelpers.VerifyPassword(request.Password, user.Password))
+            throw new Exception("Invalid email or password.");
+
+        if (user.Status != UserStatusEnum.Active)
+            throw new Exception("Account is not active.");
+
         return user;
     }
 

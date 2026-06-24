@@ -9,3 +9,9 @@ public sealed class CreateUserRequest
     public required string Password { get; set; }
     public UserTypeEnum UserType { get; set; } = UserTypeEnum.Merchant;
 }
+
+public sealed class LoginRequest
+{
+    public required string Email { get; set; }
+    public required string Password { get; set; }
+}

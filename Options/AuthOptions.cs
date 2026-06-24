@@ -5,4 +5,5 @@ public sealed class AuthOptions
     public const string SectionName = "Auth";
 
     public int OtpExpiryMinutes { get; set; } = 10;
+    public int BcryptWorkFactor { get; set; } = 11;
 }
