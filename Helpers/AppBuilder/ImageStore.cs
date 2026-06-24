@@ -1,4 +1,4 @@
-using shopify_saas_Core.Models.AppBuilder;
+using shopify_saas_Core.Models.RequestModels;
 
 namespace shopify_saas_Core.Helpers.AppBuilder;
 

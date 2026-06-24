@@ -1,6 +1,6 @@
-namespace shopify_saas_Core.Constants;
+namespace shopify_saas_Core.Constants.Enums;
 
-public enum BuildStatus
+public enum BuildStatusEnum
 {
     Queued = 0,
     Running = 1,

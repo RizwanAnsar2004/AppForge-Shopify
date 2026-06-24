@@ -1,20 +1,30 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using shopify_saas_Core.Data;
 using shopify_saas_Core.Helpers.Shopify;
 using shopify_saas_Core.Options;
 using shopify_saas_Core.Services.AppBuilder;
+using shopify_saas_Core.Services.DBServices;
 using shopify_saas_Core.Services.Shopify;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
 builder.Services.Configure<ShopifyOptions>(
     builder.Configuration.GetSection(ShopifyOptions.SectionName));
+builder.Services.Configure<AuthOptions>(
+    builder.Configuration.GetSection(AuthOptions.SectionName));
 builder.Services.Configure<AppForgeOptions>(
     builder.Configuration.GetSection(AppForgeOptions.SectionName));
 
 builder.Services.AddHttpClient<ApiCallerHelper>();
+
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddScoped<ShopifyOAuthService>();
 builder.Services.AddScoped<ShopifyProductService>();

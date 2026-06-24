@@ -1,4 +1,4 @@
-namespace shopify_saas_Core.Models.AppBuilder;
+namespace shopify_saas_Core.Models.ResponseModels;
 
 public sealed class BuildStartResponse
 {

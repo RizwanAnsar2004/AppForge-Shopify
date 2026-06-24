@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
-using shopify_saas_Core.Constants;
+using shopify_saas_Core.Constants.Enums;
 using shopify_saas_Core.Helpers.AppBuilder;
-using shopify_saas_Core.Models.AppBuilder;
+using shopify_saas_Core.Models.RequestModels;
 using shopify_saas_Core.Options;
 
 namespace shopify_saas_Core.Services.AppBuilder;
@@ -44,7 +44,7 @@ public sealed class AppBuildService
     {
         try
         {
-            job.Status = BuildStatus.Running;
+            job.Status = BuildStatusEnum.Running;
             job.Log($"▶ Build started for store '{store}'");
 
             var mobileRoot = Path.GetFullPath(_opts.MobileProjectPath, Directory.GetCurrentDirectory());
@@ -62,7 +62,7 @@ public sealed class AppBuildService
         {
             _logger.LogError(ex, "Build failed for {Store}", store);
             job.Log($"✖ {ex.Message}");
-            job.Finish(BuildStatus.Failed, null, ex.Message);
+            job.Finish(BuildStatusEnum.Failed, null, ex.Message);
         }
     }
 
@@ -89,17 +89,17 @@ public sealed class AppBuildService
     {
         var (file, args) = BuildScriptCommand(mobileRoot, store);
         var exit = await ProcessRunner.RunAsync(file, args, mobileRoot, job.Log);
-        if (exit != 0) { job.Finish(BuildStatus.Failed, null, $"Build failed (exit {exit})."); return; }
+        if (exit != 0) { job.Finish(BuildStatusEnum.Failed, null, $"Build failed (exit {exit})."); return; }
 
         var apk = Path.Combine(mobileRoot, "output", $"{store}-release.apk");
-        if (!File.Exists(apk)) { job.Finish(BuildStatus.Failed, null, "Build finished but no APK was found in output/."); return; }
+        if (!File.Exists(apk)) { job.Finish(BuildStatusEnum.Failed, null, "Build finished but no APK was found in output/."); return; }
 
         var downloads = Path.Combine(Directory.GetCurrentDirectory(), "Downloads");
         Directory.CreateDirectory(downloads);
         File.Copy(apk, Path.Combine(downloads, $"{store}-release.apk"), overwrite: true);
         job.Log($"✓ APK ready: {store}-release.apk");
 
-        job.Finish(BuildStatus.Succeeded, $"{_publicBaseUrl}/downloads/{store}-release.apk", "Build succeeded.");
+        job.Finish(BuildStatusEnum.Succeeded, $"{_publicBaseUrl}/downloads/{store}-release.apk", "Build succeeded.");
     }
 
     private static (string file, string[] args) BuildScriptCommand(string mobileRoot, string store)
@@ -125,7 +125,7 @@ public sealed class AppBuildService
         job.Log("ℹ Build pipeline disabled (AppForge:BuildEnabled=false).");
         job.Log("  Build it from the appforge-mobile project:");
         job.Log($"  {cmd}");
-        job.Finish(BuildStatus.Succeeded, null, "Config generated. Run the build command shown in the log.");
+        job.Finish(BuildStatusEnum.Succeeded, null, "Config generated. Run the build command shown in the log.");
     }
 
     private static string Sanitize(string store) =>

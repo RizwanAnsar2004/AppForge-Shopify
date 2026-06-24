@@ -1,14 +1,14 @@
-using shopify_saas_Core.Constants;
+using shopify_saas_Core.Constants.Enums;
 
 namespace shopify_saas_Core.Services.AppBuilder;
 
-public sealed record BuildEvent(string Type, string? Line = null, BuildStatus? Status = null,
+public sealed record BuildEvent(string Type, string? Line = null, BuildStatusEnum? Status = null,
     string? ApkUrl = null, string? Message = null);
 
 public sealed class BuildJob
 {
     public string Id { get; } = Guid.NewGuid().ToString("n");
-    public BuildStatus Status { get; set; } = BuildStatus.Queued;
+    public BuildStatusEnum Status { get; set; } = BuildStatusEnum.Queued;
     public string? ApkUrl { get; set; }
     public volatile bool Completed;
 
@@ -22,7 +22,7 @@ public sealed class BuildJob
 
     public void Log(string line) => Add(new BuildEvent("log", Line: line));
 
-    public void Finish(BuildStatus status, string? apkUrl, string message)
+    public void Finish(BuildStatusEnum status, string? apkUrl, string message)
     {
         Status = status;
         ApkUrl = apkUrl;

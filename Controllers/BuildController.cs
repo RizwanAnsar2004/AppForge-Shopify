@@ -1,7 +1,8 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using shopify_saas_Core.Constants;
-using shopify_saas_Core.Models.AppBuilder;
+using shopify_saas_Core.Constants.Enums;
+using shopify_saas_Core.Models.RequestModels;
+using shopify_saas_Core.Models.ResponseModels;
 using shopify_saas_Core.Services.AppBuilder;
 
 namespace shopify_saas_Core.Controllers;
@@ -34,7 +35,7 @@ public sealed class BuildController : ControllerBase
 
         if (job is null)
         {
-            await WriteEvent(new BuildEvent("done", Status: BuildStatus.Failed, Message: "Unknown build job."), ct);
+            await WriteEvent(new BuildEvent("done", Status: BuildStatusEnum.Failed, Message: "Unknown build job."), ct);
             return;
         }
 
